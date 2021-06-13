@@ -1,0 +1,48 @@
+@import: resume
+
+document(|
+  name = {John Doe};
+  location = {Tokyo, Japan};
+  phone = {+8199-9999-9999};
+  email = {johndoe\@foobar.com};
+|)'<
+  +section{Work Experience}<
+    +subsection<+what-where-when{Software Engineer}{Some company}{2019 - 2021}><
+      +listing {
+        * Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        * Dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        * Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        * Velit magna mollit adipisicing id irure.
+      }
+    >
+    +subsection<+what-where-when{Software Engineer}{Another company}{2018 - 2019}><
+      +listing{
+      * Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      * Anim laborum ex fugiat id ipsum velit anim excepteur sunt laboris pariatur ea veniam.}
+    >
+    +subsection<+what-where-when{Software Engineer Intern}{Yet Another company}{Spring 2014}><
+      +listing{
+      * Aute eiusmod occaecat ea excepteur ex amet.}
+    >
+  >
+  +section{Personal Projects}<
+    +subsection<+p{\bold{Some project}}><
+      +listing {
+        * Aliquip veniam velit laboris ex nisi id proident dolore.
+        * Sint aliquip consectetur quis eu irure est quis ad laborum ut incididunt adipisicing commodo fugiat.
+      }
+    >
+    +subsection<+p{\bold{Another poject}}><
+      +listing{* Cillum adipisicing ullamco et minim reprehenderit non occaecat incididunt ea adipisicing.}
+    >
+  >
+  +section{Education}<
+    +subsection<+what-where-when{M.S.E., Computer Science}{Some University}{2016-2018}><
+      +listing {* Cupidatat duis laborum est in officia do sit ea duis ea labore officia et laboris.}
+    >
+    +subsection<+what-where-when{B.S.E., Computer Science}{Another University}{2012-2016}><+listing{* Incididunt dolore excepteur laborum excepteur ad amet dolor dolor nisi consectetur.}>
+  >
+  +section{Skills}<
+    +p{Java, OCaml, Python, React.js, \SATySFi;}
+  >
+>

@@ -1,0 +1,164 @@
+@require: math
+@require: color
+@require: enumitem/enumitem
+
+module Resume : sig
+
+  val document : 'a -> block-text -> document
+    constraint 'a :: (|
+      name : inline-text;
+      location : inline-text;
+      phone : inline-text;
+      email : inline-text;
+    |)
+
+  direct \bold : [inline-text] inline-cmd
+
+  direct \color : [inline-text] inline-cmd
+
+  direct \emph : [inline-text] inline-cmd
+
+  direct \boldemph : [inline-text] inline-cmd
+
+  direct +p : [inline-text] block-cmd
+
+  direct +section : [inline-text; block-text] block-cmd
+
+  direct +what-where-when : [inline-text; inline-text; inline-text] block-cmd
+
+  direct +subsection : [block-text; block-text] block-cmd
+
+  direct +listing : [itemize] block-cmd
+
+end = struct
+  let font-ratio-latin = 1.
+  let font-latin-roman  = (`Junicode`   , font-ratio-latin, 0.)
+  let font-latin-bold   = (`Junicode-b` , font-ratio-latin, 0.)
+  let font-latin-italic = (`Junicode-it`, font-ratio-latin, 0.)
+  let font-latin-bold-italic = (`Junicode-b-it`, font-ratio-latin, 0.)
+
+  let ctx-set-color ctx = ctx |> set-text-color (Color.rgb 0.17 0.22 0.34)
+
+  let ctx-font-size-lg ctx = ctx |> set-font-size ((get-font-size ctx) *' 2.)
+  let ctx-font-size-md ctx = ctx |> set-font-size ((get-font-size ctx) *' 1.5)
+
+  let ctx-mb-lg ctx = ctx |> set-paragraph-margin 0.pt 18.pt
+  let ctx-mb-md ctx = ctx |> set-paragraph-margin 0.pt 12.pt
+  let ctx-mb-sm ctx = ctx |> set-paragraph-margin 0.pt 3.pt
+  let ctx-mbt-md ctx = ctx |> set-paragraph-margin 8.pt 8.pt
+
+
+  let-inline ctx \color it = read-inline (ctx |> ctx-set-color) it
+
+  let-inline ctx \bold it =
+    let ctx-bold = ctx |> set-font Latin font-latin-bold in
+    read-inline ctx-bold it
+
+  let-inline ctx \emph it =
+    let ctx = ctx |> set-font Latin font-latin-italic in
+    read-inline ctx it
+
+  let-inline ctx \boldemph it =
+    let ctx = ctx |> set-font Latin font-latin-bold-italic in
+    read-inline ctx it
+
+  let-inline ctx \lg it = read-inline (ctx |> ctx-font-size-lg) it
+
+  let-inline ctx \md it = read-inline (ctx |> ctx-font-size-md) it
+
+  let-block ctx +p it =
+    let ib-inner  = read-inline ctx it in
+    line-break true true ctx (ib-inner ++ inline-fil)
+
+  let-block ctx +right-align it =
+    inline-fil ++ (read-inline ctx it)
+    |> line-break true true ctx
+
+  let-block ctx +center it =
+    inline-fil ++ (read-inline ctx it) ++ inline-fil
+    |> line-break true true ctx
+
+  let-block ctx +long-underline it =
+    let thickness = 0.5pt in
+    let color = Color.black in
+    let strokef = stroke thickness color in
+    let ib = (read-inline ctx it) ++ inline-fil in
+    ib
+    |> inline-frame-outer (0.pt, 0.pt, 0.pt, 3.pt) (fun (x, y) w h d -> [
+      Gr.line (x, y -' d) (x +' w, y -' d) |> strokef
+    ])
+    |> line-break true true ctx
+
+  let-block ctx +section header-it body-bt =
+    let ctx = ctx |> ctx-mb-md in
+    let header-bb =
+      '<+long-underline{\color{\bold{\md{#header-it;}}}}>
+      |> read-block (ctx |> ctx-mbt-md)
+    in
+    let body-bb = body-bt |> read-block ctx
+    in
+    header-bb +++ body-bb
+
+  let multicolumn ctx items =
+    let text-width = get-text-width ctx in
+    items
+    |> List.map (fun (ratio, bt) -> (text-width *' ratio, bt))
+    |> List.fold-left (fun acc-it (wid, bt) -> (
+      acc-it ++ (embed-block-top ctx wid (fun ctx -> read-block ctx bt)))) inline-nil
+    |> line-break true true ctx
+
+
+  let-block ctx +what-where-when what-it where-it when-it =
+    multicolumn ctx [
+      (0.333, '<+p{\bold{#what-it;}}>);
+      (0.333, '<+center{\bold{#where-it;}}>);
+      (0.333, '<+right-align{#when-it;}>);
+    ]
+
+
+  let-block ctx +subsection header-bt body-bt =
+    read-block (ctx |> ctx-mb-sm) header-bt
+    +++ read-block (ctx |> ctx-mb-md) body-bt
+
+  let-block ctx +listing item =
+    let listing-bb =
+      '<+Enumitem.listing?:(Enumitem.white-bullet)(item);>
+      |> read-block (ctx |> ctx-mb-sm)
+    in
+    let blank-line-bb = read-block (ctx |> ctx-mb-sm) '<+p{}> in
+    listing-bb +++ blank-line-bb
+
+  let get-standard-context wid =
+    get-initial-context wid (command \math)
+    |> set-font Latin font-latin-roman
+    |> set-leading 0.pt
+    |> set-min-gap-of-lines 2.5pt
+    |> ctx-mb-lg
+
+  let document record bt =
+    let name = record#name in
+    let location = record#location in
+    let phone = record#phone in
+    let email = record#email in
+    let ctx = get-standard-context 490pt in
+    let header = multicolumn (ctx |> ctx-mb-lg) [
+      (0.4, '<+p{\color{\bold{\lg{#name;}}}}>);
+      (0.6, '<+right-align{#location; \|\ #phone; \|\ #email;}>)
+    ]
+    in
+    let bb = read-block ctx bt in
+    page-break A4Paper
+      (fun _ -> (|
+        text-origin = (50pt, 30pt);
+        text-height = 630pt;
+      |))
+      (fun _ -> (|
+        header-origin = (0pt, 0pt);
+        header-content = block-nil;
+        footer-origin = (0pt, 0pt);
+        footer-content = block-nil;
+      |))
+      (header +++ bb)
+end
+
+let document = Resume.document
