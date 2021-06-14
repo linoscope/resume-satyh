@@ -17,32 +17,49 @@ document(|
     >
     +subsection<+what-where-when{Software Engineer}{Another company}{2018 - 2019}><
       +listing{
-      * Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-      * Anim laborum ex fugiat id ipsum velit anim excepteur sunt laboris pariatur ea veniam.}
+        * Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        * Anim laborum ex fugiat id ipsum velit anim excepteur sunt laboris pariatur ea veniam.
+        * Tincidunt dui ut ornare lectus sit amet est placerat. Lacus sed turpis tincidunt id aliquet risus feugiat.
+      }
     >
     +subsection<+what-where-when{Software Engineer Intern}{Yet Another company}{Spring 2014}><
       +listing{
-      * Aute eiusmod occaecat ea excepteur ex amet.}
+        * Aute eiusmod occaecat ea excepteur ex amet.
+        * Cras tincidunt lobortis feugiat vivamus at augue.
+      }
     >
   >
   +section{Personal Projects}<
-    +subsection<+p{\bold{Some project}}><
+    +subsection<+p{\bold{Some project} (\href(`https://github.com`){github})}><
       +listing {
         * Aliquip veniam velit laboris ex nisi id proident dolore.
         * Sint aliquip consectetur quis eu irure est quis ad laborum ut incididunt adipisicing commodo fugiat.
       }
     >
     +subsection<+p{\bold{Another poject}}><
-      +listing{* Cillum adipisicing ullamco et minim reprehenderit non occaecat incididunt ea adipisicing.}
+      +listing{
+        * Cillum adipisicing ullamco et minim reprehenderit non occaecat incididunt ea adipisicing.
+        * Nunc congue nisi vitae suscipit tellus mauris. Donec massa sapien faucibus et molestie ac feugiat sed lectus. Posuere ac ut consequat semper viverra nam libero.
+      }
     >
+    +subsection<+p{\bold{Yet Another poject}}><
+      +listing{
+        * Interdum consectetur libero id faucibus nisl tincidunt. Ut placerat orci nulla pellentesque dignissim enim sit amet.
+        * Vitae tempus quam pellentesque nec. Auctor augue mauris augue neque gravida in.
+      }
+    >
+
   >
   +section{Education}<
     +subsection<+what-where-when{M.S.E., Computer Science}{Some University}{2016-2018}><
-      +listing {* Cupidatat duis laborum est in officia do sit ea duis ea labore officia et laboris.}
+      +listing {
+        * Cupidatat duis laborum est in officia do sit ea duis ea labore officia et laboris.
+        * Nibh tellus molestie nunc non. Eget duis at tellus at urna condimentum. Dolor sit amet consectetur adipiscing. Mattis pellentesque id nibh tortor id aliquet lectus.
+      }
     >
     +subsection<+what-where-when{B.S.E., Computer Science}{Another University}{2012-2016}><+listing{* Incididunt dolore excepteur laborum excepteur ad amet dolor dolor nisi consectetur.}>
   >
   +section{Skills}<
     +p{Java, OCaml, Python, React.js, \SATySFi;}
-  >
+    >
 >
