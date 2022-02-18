@@ -40,15 +40,17 @@ end = struct
   let font-latin-italic = (`Junicode-it`, font-ratio-latin, 0.)
   let font-latin-bold-italic = (`Junicode-b-it`, font-ratio-latin, 0.)
 
-  let ctx-set-color ctx = ctx |> set-text-color (Color.rgb 0.17 0.22 0.34)
+  let std-color = Color.rgb 0.17 0.22 0.34
+
+  let ctx-set-color ctx = ctx |> set-text-color std-color
 
   let ctx-font-size-lg ctx = ctx |> set-font-size ((get-font-size ctx) *' 1.8)
   let ctx-font-size-md ctx = ctx |> set-font-size ((get-font-size ctx) *' 1.3)
 
-  let ctx-mb-lg ctx = ctx |> set-paragraph-margin 0.pt 18.pt
+  let ctx-mb-lg ctx = ctx |> set-paragraph-margin 0.pt 16.pt
   let ctx-mb-md ctx = ctx |> set-paragraph-margin 0.pt 12.pt
-  let ctx-mb-sm ctx = ctx |> set-paragraph-margin 0.pt 3.pt
-  let ctx-mbt-md ctx = ctx |> set-paragraph-margin 8.pt 8.pt
+  let ctx-mb-sm ctx = ctx |> set-paragraph-margin 0.pt 4.pt
+  let ctx-mbt-md ctx = ctx |> set-paragraph-margin 6.pt 8.pt
 
   let-inline ctx \color it = read-inline (ctx |> ctx-set-color) it
 
@@ -65,14 +67,13 @@ end = struct
     read-inline ctx it
 
   let-inline ctx \underline it =
-    let thickness = 0.05pt in
-    let color = Color.gray 0.8 in
+    let thickness = 0.4pt in
+    let color = Color.gray 0.3 in
     let strokef = stroke thickness color in
     read-inline ctx it
     |> inline-frame-outer (0.pt, 0.pt, 0.pt, 0.pt) (fun (x, y) w h d -> [
-      Gr.line (x, y -' d) (x +' w, y -' d) |> strokef
+      Gr.line (x, y -' d -' 1.1pt) (x +' w, y -' d -' 1.1pt) |> strokef
     ])
-
 
   let-inline \href url it = {\underline{\href(url){#it;}}}
 
@@ -94,8 +95,7 @@ end = struct
 
   let-block ctx +long-underline it =
     let thickness = 0.5pt in
-    let color = Color.black in
-    let strokef = stroke thickness color in
+    let strokef = stroke thickness std-color in
     let ib = (read-inline ctx it) ++ inline-fil in
     ib
     |> inline-frame-outer (0.pt, 0.pt, 0.pt, 3.pt) (fun (x, y) w h d -> [
@@ -104,7 +104,7 @@ end = struct
     |> line-break true true ctx
 
   let-block ctx +section header-it body-bt =
-    let ctx = ctx |> ctx-mb-md in
+    let ctx = ctx |> ctx-mb-sm in
     let header-bb =
       '<+long-underline{\color{\bold{\md{#header-it;}}}}>
       |> read-block (ctx |> ctx-mbt-md)
@@ -136,7 +136,7 @@ end = struct
 
   let-block ctx +listing item =
     let listing-bb =
-      '<+Enumitem.listing?:(Enumitem.white-bullet)(item);>
+      '<+EnumitemAlias.listing?:(EnumitemAlias.white-bullet)(item);>
       |> read-block (ctx |> ctx-mb-sm)
     in
     let blank-line-bb = read-block (ctx |> ctx-mb-sm) '<+p{}> in
@@ -148,6 +148,7 @@ end = struct
     |> set-leading 0.pt
     |> set-min-gap-of-lines 2.5pt
     |> ctx-mb-lg
+    |> set-hyphen-penalty 1000
 
   let document record bt =
     let name = record#name in
@@ -163,7 +164,7 @@ end = struct
     let bb = read-block ctx bt in
     page-break A4Paper
       (fun _ -> (|
-        text-origin = (50pt, 30pt);
+        text-origin = (50pt, 40pt);
         text-height = 780pt;
       |))
       (fun _ -> (|
